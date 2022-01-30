@@ -53,17 +53,17 @@ def index_7(n):
         return render_template('/6-number_odd_or_even.html', n=n, m='odd')
 
 
-@app.teardown_appcontext
-def index_8(self):
-    """Close the ssesion"""
-    storage.close()
-
-
 @app.route('/states_list')
 def run_all_states():
     """Run all states"""
-    l = storage.all('State')
-    return render_template('7-states_list.html', l=l)
+    return render_template('7-states_list.html',
+                           storage=storage.all('State'))
+
+
+@app.teardown_appcontext
+def do_teardown(self):
+    """Closes session"""
+    storage.close()
 
 
 if __name__ == '__main__':
