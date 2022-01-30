@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 """Allows manage storage of hbnb models using SQL Alchemy"""
-from requests import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from os import getenv
@@ -79,8 +78,8 @@ class DBStorage():
         Session = scoped_session(sessionmaker(bind=self.__engine,
                                               expire_on_commit=False))
 
-        self.__session = Session
+        self.__session = Session()
 
     def close(self):
         """Method for deserializing the JSON file to objects"""
-        self.__session.remove()
+        self.__session.close()
