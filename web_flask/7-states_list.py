@@ -59,11 +59,11 @@ def index_8(self):
     storage.close()
 
 
-@app.route('/states_list', strict_slashes=False)
-def index_9():
-    """Display a HTML page with a storage"""
-    return render_template('/7-states_list.html',
-                           storage=storage.all('State'))
+@app.route('/states_list')
+def run_all_states():
+    """Run all states"""
+    l = storage.all('State')
+    return render_template('7-states_list.html', l=l)
 
 
 if __name__ == '__main__':
