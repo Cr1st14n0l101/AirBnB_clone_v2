@@ -29,11 +29,10 @@ def index_4(text='is cool'):
     return 'Python ' + str(text.replace("_", " "))
 
 
-@app.route('/number/<n>', strict_slashes=False)
+@app.route('/number/<int:n>', strict_slashes=False)
 def index_5(n):
     """Displays value of the n variable if is integer"""
-    if type(int(n)) == int:
-        return '{} is a number'.format(n)
+    return '{} is a number'.format(n)
 
 
 if __name__ == '__main__':
