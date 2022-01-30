@@ -53,7 +53,7 @@ def index_7(n):
         return render_template('/6-number_odd_or_even.html', n=n, m='odd')
 
 
-@app.route('/states_list')
+@app.route('/states_list', strict_slashes=False)
 def run_all_states():
     """Run all states"""
     return render_template('7-states_list.html',
