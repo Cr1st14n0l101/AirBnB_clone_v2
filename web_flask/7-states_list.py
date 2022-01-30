@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 """Script that starts a Flask web application"""
 from models import storage
-from models.state import State
 from flask import Flask
 from flask import render_template
 app = Flask(__name__)
@@ -64,7 +63,7 @@ def index_8(self):
 def index_9():
     """Display a HTML page with a storage"""
     return render_template('/7-states_list.html',
-                           storage=storage.all(State))
+                           storage=storage.all('State'))
 
 
 if __name__ == '__main__':
