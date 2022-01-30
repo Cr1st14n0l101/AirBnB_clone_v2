@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 """Script that starts a Flask web application"""
 from models import storage
-from models.state import State
 from flask import Flask
 from flask import render_template
 app = Flask(__name__)
@@ -54,24 +53,24 @@ def index_7(n):
         return render_template('/6-number_odd_or_even.html', n=n, m='odd')
 
 
-@app.teardown_appcontext
-def index_8(self):
-    """Close the ssesion"""
-    storage.close()
-
-
 @app.route('/states_list', strict_slashes=False)
 def index_9():
     """Display a HTML page with a storage"""
     return render_template('/7-states_list.html',
-                           storage=storage.all(State))
+                           storage=storage.all('State'))
 
 
 @app.route('/cities_by_states', strict_slashes=False)
 def index_10():
     """Display a HTML page with a storage"""
     return render_template('/8-cities_by_states.html',
-                           storage=storage.all(State))
+                           storage=storage.all('State'))
+
+
+@app.teardown_appcontext
+def index_8(self):
+    """Close the ssesion"""
+    storage.close()
 
 
 if __name__ == '__main__':
