@@ -1,63 +1,79 @@
 #!/usr/bin/python3
-"""Script that starts a Flask web application"""
+"""Simple Flask app, with additional route"""
+from flask import Flask, abort, render_template
 from models import storage
-from flask import Flask
-from flask import render_template
+
+
 app = Flask(__name__)
+app.url_map.strict_slashes = False
 
 
-@app.route('/', strict_slashes=False)
-def index():
-    """Displays Hello HBHB!"""
+@app.route('/')
+def hello_holberton():
+    """Hello Flask"""
     return 'Hello HBNB!'
 
 
-@app.route('/hbnb', strict_slashes=False)
-def index_2():
-    """Displays HBHB"""
+@app.route('/hbnb')
+def hello_hbnb():
+    """hello holberton"""
     return 'HBNB'
 
 
-@app.route('/c/<text>', strict_slashes=False)
-def index_3(text):
-    """Displays value of the text variable"""
-    return 'C ' + str(text.replace("_", " "))
+@app.route('/c/<text>')
+def run_text(text):
+    """Run text"""
+    text = 'C ' + text.replace('_', ' ')
+    return text
 
 
-@app.route('/python', strict_slashes=False)
-@app.route('/python/<text>', strict_slashes=False)
-def index_4(text='is cool'):
-    """Displays value of the text variable, text now have a default value"""
-    return 'Python ' + str(text.replace("_", " "))
+@app.route('/python/<text>')
+@app.route('/python')
+def run_python(text='is cool'):
+    """Python route"""
+    text = 'Python ' + text.replace('_', ' ')
+    return text
 
 
-@app.route('/number/<n>', strict_slashes=False)
-def index_5(n):
-    """Displays value of the n variable if is integer"""
-    if type(int(n)) == int:
-        return '{} is a number'.format(n)
+@app.route('/number/<n>')
+def run_number(n):
+    """Run number"""
+    try:
+        n = int(n)
+    except ValueError:
+        abort(404)
+    text = str(n) + ' is a number'
+    return text
 
 
-@app.route('/number_template/<int:n>', strict_slashes=False)
-def index_6(n):
-    """Displays a html file with the n variable if is integer"""
-    return render_template('/5-number.html', n=n)
+@app.route('/number_template/<n>')
+def run_template(n):
+    """Template example"""
+    try:
+        n = int(n)
+    except ValueError:
+        abort(404)
+    return render_template('5-number.html', n=n)
 
 
-@app.route('/number_odd_or_even/<int:n>', strict_slashes=False)
-def index_7(n):
-    """Displays a html file with the n variable if is integer"""
+@app.route('/number_odd_or_even/<n>')
+def run_template_odd_or_even(n):
+    """Odd or even"""
+    try:
+        n = int(n)
+    except ValueError:
+        abort(404)
+    t = 'odd'
     if n % 2 == 0:
-        return render_template('/6-number_odd_or_even.html', n=n, m='even')
-    else:
-        return render_template('/6-number_odd_or_even.html', n=n, m='odd')
+        t = 'even'
+    return render_template('6-number_odd_or_even.html', n=n, t=t)
 
 
-@app.route('/states_list', strict_slashes=False)
+@app.route('/states_list')
 def run_all_states():
     """Run all states"""
-    return render_template('7-states_list.html',
-                           storage=storage.all('State'))
+    list = storage.all('State')
+    return render_template('7-states_list.html', storage=list)
 
 
 @app.teardown_appcontext
@@ -65,7 +81,5 @@ def do_teardown(self):
     """Closes session"""
     storage.close()
 
-
-if __name__ == '__main__':
-    """Entry Point"""
-    app.run(host='0.0.0.0', port=5000)
+if __name__ == "__main__":
+    app.run(host='0.0.0.0')
