@@ -6,8 +6,8 @@
     <BODY>
         <H1>States</H1>
         <LU>
-            {% for item in storage.values() | sort(attribute="name") %}
-            <LI>{{ item.id }}: <B>{{ item.name }}</B></LI>
+            {% for state in storage.values() | sort(attribute="name") %}
+            <LI>{{ state.id }}: <B>{{ state.name }}</B></LI>
             {% endfor %}
         </LU>
     </BODY>
