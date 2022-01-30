@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 """Allows manage storage of hbnb models using SQL Alchemy"""
+from requests import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from os import getenv
@@ -56,6 +57,7 @@ class DBStorage():
         """Add the object to the current database session"""
         if obj:
             self.__session.add(obj)
+            self.save()
 
     def save(self):
         """Commit all changes of the current database session"""
@@ -65,13 +67,20 @@ class DBStorage():
         """Delete from the current database session obj if not None"""
         if obj:
             self.__session.delete(obj)
+            self.save()
 
     def reload(self):
         """Create all tables in the database
         and create the current database session by by using a sessionmaker """
+        from models.base_model import BaseModel, Base
+        from models import user, state, city, amenity, place, review
         Base.metadata.create_all(self.__engine)
 
         Session = scoped_session(sessionmaker(bind=self.__engine,
                                               expire_on_commit=False))
 
-        self.__session = Session()
+        self.__session = Session
+
+    def close(self):
+        """Method for deserializing the JSON file to objects"""
+        self.__session.remove()

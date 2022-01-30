@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<HML lang="en">
+<HEAD>
+    <TITLE>HBNB</TITLE>
+</HEAD>
+<BODY>
+    <H1>States</H1>
+    <LU>
+    {% for item in storage.values() | sort(attribute="name") %}
+        <li>{{ item.id }}: <B>{{ item.name }}</B></li>
+    {% endfor %}
+    </LU>
+</BODY>
+</HTML>

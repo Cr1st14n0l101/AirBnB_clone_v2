@@ -1,12 +1,20 @@
 #!/usr/bin/python3
 """ Place Module for HBNB project """
-import models
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, Integer, String, Float, Table
 from sqlalchemy.sql.schema import ForeignKey
 from sqlalchemy.orm import relationship
 from os import getenv
 from models.review import Review
+
+
+association_table = Table('place_amenity', Base.metadata,
+                            Column('place_id', String(60),
+                                    ForeignKey('places.id'),
+                                    nullable=False),
+                            Column('amenity_id', String(60),
+                                    ForeignKey('amenities.id'),
+                                    nullable=False))
 
 
 class Place(BaseModel, Base):
@@ -27,23 +35,18 @@ class Place(BaseModel, Base):
     longitude = Column(Float)
     amenity_ids = []
 
-    association_table = Table('place_amenity', Base.metadata,
-                              Column('place_id', String(60),
-                                     ForeignKey('places.id'),
-                                     nullable=False),
-                              Column('amenity_id', String(60),
-                                     ForeignKey('amenities.id'),
-                                     nullable=False))
 
     if env == 'db':
         reviews = relationship('Review', backref="places")
         amenities = relationship("Amenity",
-                                 secondary=association_table)
+                                 secondary=association_table,
+                                 viewonly=False)
     else:
         @property
         def reviews(self):
             """Getter of reviews"""
-            review_dict = models.storage.all(Review)
+            from models import storage
+            review_dict = storage.all(Review)
             review_list = []
             for key, value in review_dict.items():
                 if value.place_id == self.id:
